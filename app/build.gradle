@@ -1,12 +1,13 @@
 plugins {
     id 'com.android.application'
+    id 'com.google.devtools.ksp'
     id 'org.jetbrains.kotlin.android'
-    id 'org.jetbrains.kotlin.kapt'
     id 'org.jetbrains.kotlin.plugin.serialization'
 }
 
 android {
     compileSdk 33
+    compileSdkPreview "UpsideDownCake"
 
     defaultConfig {
         applicationId "com.github.capntrips.kernelflasher"
@@ -14,6 +15,15 @@ android {
         targetSdk 33
         versionCode 14
         versionName "1.0.0-alpha14"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += [
+                    "room.schemaLocation": "$projectDir/schemas".toString(),
+                    "room.incremental": "true"
+                ]
+            }
+        }
 
         vectorDrawables {
             useSupportLibrary true
@@ -25,12 +35,15 @@ android {
             minifyEnabled false
         }
     }
+    buildFeatures {
+        aidl true
+    }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '17'
     }
     buildFeatures {
         compose true
@@ -59,7 +72,7 @@ dependencies {
     implementation "androidx.navigation:navigation-compose:$nav_version"
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
-    kapt "androidx.room:room-compiler:$room_version"
+    ksp "androidx.room:room-compiler:$room_version"
     implementation "com.github.topjohnwu.libsu:core:$libsu_version"
     implementation "com.github.topjohnwu.libsu:io:$libsu_version"
     implementation "com.github.topjohnwu.libsu:nio:$libsu_version"
